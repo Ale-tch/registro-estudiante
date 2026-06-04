@@ -53,7 +53,7 @@ formulario.addEventListener("submit", async (e) => {
 
         }
 
-    } catch(error) {
+        } catch(error) {
 
         console.error(error);
 
@@ -65,9 +65,5 @@ formulario.addEventListener("submit", async (e) => {
         `;
 
     }
-
-});
-
-    formulario.reset();
 
 });
