@@ -1,39 +1,72 @@
 const formulario = document.getElementById("registroForm");
-const resultado = document.getElementById("resultado");
 
-formulario.addEventListener("submit", function(e){
+formulario.addEventListener("submit", async (e) => {
 
     e.preventDefault();
 
-    const nombre = document.getElementById("nombre").value;
-    const apellidoP = document.getElementById("apellidoP").value;
-    const apellidoM = document.getElementById("apellidoM").value;
-    const matricula = document.getElementById("matricula").value;
-    const carrera = document.getElementById("carrera").value;
-    const semestre = document.getElementById("semestre").value;
-    const grupo = document.getElementById("grupo").value;
-    const correo = document.getElementById("correo").value;
-    const fecha = document.getElementById("fecha").value;
-    const hora = document.getElementById("hora").value;
-    const motivo = document.getElementById("motivo").value;
-    const observaciones = document.getElementById("observaciones").value;
+    const datos = {
+        nombre: document.getElementById("nombre").value,
+        apellidoP: document.getElementById("apellidoP").value,
+        apellidoM: document.getElementById("apellidoM").value,
+        matricula: document.getElementById("matricula").value,
+        carrera: document.getElementById("carrera").value,
+        semestre: document.getElementById("semestre").value,
+        grupo: document.getElementById("grupo").value,
+        correo: document.getElementById("correo").value,
+        fecha: document.getElementById("fecha").value,
+        hora: document.getElementById("hora").value,
+        motivo: document.getElementById("motivo").value,
+        observaciones: document.getElementById("observaciones").value
+    };
 
-    resultado.innerHTML = `
-        <div class="registro-exitoso">
-            <h2>✅ Registro realizado correctamente</h2>
+    try {
 
-            <p><strong>Nombre:</strong> ${nombre} ${apellidoP} ${apellidoM}</p>
-            <p><strong>Matrícula:</strong> ${matricula}</p>
-            <p><strong>Carrera:</strong> ${carrera}</p>
-            <p><strong>Semestre:</strong> ${semestre}</p>
-            <p><strong>Grupo:</strong> ${grupo}</p>
-            <p><strong>Correo:</strong> ${correo}</p>
-            <p><strong>Fecha:</strong> ${fecha}</p>
-            <p><strong>Hora:</strong> ${hora}</p>
-            <p><strong>Motivo:</strong> ${motivo}</p>
-            <p><strong>Observaciones:</strong> ${observaciones}</p>
-        </div>
-    `;
+        const respuesta = await fetch('/api/registrar', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(datos)
+        });
+
+        const resultado = await respuesta.json();
+
+        if (respuesta.ok) {
+
+            document.getElementById("resultado").innerHTML = `
+                <div class="registro-exitoso">
+                    <h2>✅ Registro guardado</h2>
+                    <p>El estudiante fue registrado correctamente.</p>
+                </div>
+            `;
+
+            formulario.reset();
+
+        } else {
+
+            document.getElementById("resultado").innerHTML = `
+                <div class="registro-exitoso">
+                    <h2>❌ Error</h2>
+                    <p>${resultado.error}</p>
+                </div>
+            `;
+
+        }
+
+    } catch(error) {
+
+        console.error(error);
+
+        document.getElementById("resultado").innerHTML = `
+            <div class="registro-exitoso">
+                <h2>❌ Error de conexión</h2>
+                <p>No se pudo conectar con el servidor.</p>
+            </div>
+        `;
+
+    }
+
+});
 
     formulario.reset();
 
